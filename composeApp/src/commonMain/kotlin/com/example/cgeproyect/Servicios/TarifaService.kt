@@ -1,13 +1,17 @@
-package com.example.cgeproyect.Servicios
+package com.example.cgeproyect.servicios
 
-import com.example.cgeproyect.Dominio.*
+// --- IMPORTACIONES DEL DOMINIO ---
+import com.example.cgeproyect.Dominio.Cliente
+import com.example.cgeproyect.Dominio.Tarifa
+import com.example.cgeproyect.Dominio.TarifaComercial
+import com.example.cgeproyect.Dominio.TarifaResidencial
 
-// Servicio para determinar la tarifa
+// Esta es la clase que no se está encontrando
 class TarifaService {
-    // Determina la tarifa para un cliente
+
+    // Esta es la función que no se está encontrando
     fun tarifaParaCliente(cliente: Cliente): Tarifa {
-        // --- LÓGICA ACTUALIZADA ---
-        // Ahora lee la propiedad guardada en el cliente
+        // Lee la propiedad guardada en el cliente
         return if (cliente.tipoTarifa.equals("Comercial", ignoreCase = true)) {
             TarifaComercial()
         } else {

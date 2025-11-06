@@ -1,8 +1,10 @@
-package com.example.cgeproyect.servicios // <-- Asegúrate que esté en minúscula
+package com.example.cgeproyect.servicios
 
 import com.example.cgeproyect.Dominio.Boleta
 import com.example.cgeproyect.Dominio.Cliente
 
+// Clase 'expect' (la definición compartida)
 expect class PdfService() {
-    fun generarBoletaPDF(boleta: Boleta, cliente: Cliente): ByteArray
+    // AHORA ACEPTA UN NUEVO PARÁMETRO: medidorCodigo
+    fun generarBoletaPDF(boleta: Boleta, cliente: Cliente, historial: Map<Int, Double>, medidorCodigo: String): ByteArray
 }

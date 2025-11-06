@@ -6,20 +6,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.cgeproyect.Dominio.Boleta
-import com.example.cgeproyect.Servicios.BoletaService
+import com.example.cgeproyect.servicios.BoletaService // <-- ESTA LÍNEA ARREGLA 4 ERRORES
 import com.example.cgeproyect.AppViewModel
 import com.example.cgeproyect.savePdf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BoletaScreen(boletaService: BoletaService) {
+fun BoletaScreen(boletaService: BoletaService) { // <-- Error estaba aquí
+    // ... (la lógica de validación de mes no cambia) ...
     var rutCliente by remember { mutableStateOf("11-1") }
     var anio by remember { mutableStateOf("2025") }
-    var mes by remember { mutableStateOf("10") } // Estado para el mes
+    var mes by remember { mutableStateOf("10") }
     var mensaje by remember { mutableStateOf("") }
     var boletaGenerada by remember { mutableStateOf<Boleta?>(null) }
 
-    // --- Lógica de validación para el mes ---
     val mesInt = mes.toIntOrNull()
     val isMonthError = mes.isEmpty() || mesInt == null || mesInt !in 1..12
 
@@ -29,24 +29,23 @@ fun BoletaScreen(boletaService: BoletaService) {
         OutlinedTextField(rutCliente, { rutCliente = it }, label = { Text("RUT Cliente") })
         OutlinedTextField(anio, { anio = it }, label = { Text("Año (Ej: 2025)") })
 
-        // --- Campo de Mes Modificado ---
+        // ... (el campo de Mes no cambia) ...
         OutlinedTextField(
             value = mes,
             onValueChange = { newValue ->
                 if (newValue.isEmpty()) {
-                    mes = "" // 1. Permite borrar
+                    mes = ""
                 } else if (newValue.all { it.isDigit() } && newValue.length <= 2) {
-                    // 2. Solo permite 2 dígitos numéricos
                     val intValue = newValue.toIntOrNull()
                     if (intValue == null) {
-                        if (newValue == "0") mes = "0" // Permite escribir "0" (para "01")
-                    } else if (intValue in 0..12) { // 3. Permite números entre 0 y 12
+                        if (newValue == "0") mes = "0"
+                    } else if (intValue in 0..12) {
                         mes = newValue
                     }
                 }
             },
             label = { Text("Mes (1-12)") },
-            isError = isMonthError, // 4. Muestra el error
+            isError = isMonthError,
             singleLine = true
         )
         if (isMonthError) {
@@ -56,12 +55,12 @@ fun BoletaScreen(boletaService: BoletaService) {
                 style = MaterialTheme.typography.labelSmall
             )
         }
-        // --- Fin del Campo de Mes ---
 
         Button(
             onClick = {
                 try {
                     boletaGenerada = null
+                    // Esta era la línea 65 con error
                     val boleta = boletaService.emitirBoletaMensual(rutCliente, anio.toInt(), mes.toInt())
                     boletaGenerada = boleta
                     mensaje = "Boleta generada con éxito. Ya puedes exportar."
@@ -70,7 +69,7 @@ fun BoletaScreen(boletaService: BoletaService) {
                     println(e)
                 }
             },
-            enabled = !isMonthError // 5. El botón se desactiva si hay error
+            enabled = !isMonthError
         ) {
             Text("Emitir Boleta")
         }
@@ -78,9 +77,9 @@ fun BoletaScreen(boletaService: BoletaService) {
         Text(mensaje, color = MaterialTheme.colorScheme.primary)
 
         boletaGenerada?.let { boleta ->
-            // ... (El resto de la Card para mostrar la boleta) ...
             Card(modifier = Modifier.fillMaxWidth().padding(top = 16.dp)) {
                 Column(Modifier.padding(16.dp)) {
+                    // ... (Textos de la boleta) ...
                     Text("Detalle Boleta ${boleta.mes}/${boleta.anio}", style = MaterialTheme.typography.titleMedium)
                     Text("Cliente RUT: ${boleta.idCliente}")
                     Text("Consumo: ${boleta.kwhTotal} kWh")
@@ -93,6 +92,7 @@ fun BoletaScreen(boletaService: BoletaService) {
                     Button(
                         onClick = {
                             try {
+                                // Esta era la línea 96 con error
                                 val bytes = boletaService.exportarPdfClienteMes(
                                     boleta.idCliente, boleta.anio, boleta.mes,
                                     AppViewModel.pdfService

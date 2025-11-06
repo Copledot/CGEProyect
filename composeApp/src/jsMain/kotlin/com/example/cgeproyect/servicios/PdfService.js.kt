@@ -4,13 +4,14 @@ import com.example.cgeproyect.Dominio.Boleta
 import com.example.cgeproyect.Dominio.Cliente
 
 // Implementación 'actual' para JS (Web)
-// Esto solo genera un archivo de texto
 actual class PdfService {
-    actual fun generarBoletaPDF(boleta: Boleta, cliente: Cliente): ByteArray {
+    // ACEPTA EL NUEVO PARÁMETRO
+    actual fun generarBoletaPDF(boleta: Boleta, cliente: Cliente, historial: Map<Int, Double>, medidorCodigo: String): ByteArray {
         val tabla = boleta.toPdfTable()
 
-        // Simulación de creación de PDF (es solo texto)
+        // Simulación (sigue siendo texto plano)
         val stringBuilder = StringBuilder()
+        // ... (el resto del stringBuilder)
         stringBuilder.append("--- BOLETA CGE ELECTRICIDAD ---\n")
         stringBuilder.append("Cliente: ${cliente.nombre}\n")
         stringBuilder.append("---------------------------------\n")
