@@ -1,10 +1,10 @@
 package com.example.cgeproyect.Dominio
 
-// Subclase de Medidor [cite: 150]
+// subclase que representa un medidor monofásico
 data class MedidorMonofasico(
     override val codigo: String,
     override val direccionSuministro: String,
     val potenciaMaxKw: Double
 ) : Medidor() {
-    override fun tipo(): String = "Monofásico" // Implementación [cite: 151]
+    override fun tipo(): String = "Monofásico"
 }

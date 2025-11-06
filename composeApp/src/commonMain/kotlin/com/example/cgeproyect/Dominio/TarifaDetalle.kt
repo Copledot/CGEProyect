@@ -1,6 +1,6 @@
 package com.example.cgeproyect.Dominio
 
-// Clase de datos para los resultados del cálculo [cite: 153]
+// resultados del calculo
 data class TarifaDetalle(
     val kwh: Double,
     val subtotal: Double,

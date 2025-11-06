@@ -40,6 +40,7 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
             implementation("org.apache.pdfbox:pdfbox:3.0.2")
+            implementation(compose.materialIconsExtended)
         }
     }
 }

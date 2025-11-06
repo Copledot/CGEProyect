@@ -4,19 +4,19 @@ import com.example.cgeproyect.dominio.EstadoBoleta
 
 // Clase Boleta que implementa la interfaz
 data class Boleta(
-    val idCliente: String, // RUT del cliente
+    val rut: String,
     val anio: Int,
     val mes: Int,
     val kwhTotal: Double,
     val detalle: TarifaDetalle,
-    var estado: EstadoBoleta = EstadoBoleta.EMITIDA // <-- ERROR ESTABA AQUÍ
+    var estado: EstadoBoleta = EstadoBoleta.EMITIDA
 ) : EntidadBase(), ExportablePDF {
 
-    // Implementación de la interfaz para generar tabla PDF
+    // Implementacion de la interfaz para generar tabla PDF
     override fun toPdfTable(): PdfTable {
         val headers = listOf("Concepto", "Valor")
         val rows = listOf(
-            listOf("RUT Cliente", idCliente),
+            listOf("RUT Cliente", rut),
             listOf("Mes/Año", "$mes/$anio"),
             listOf("Consumo (kWh)", kwhTotal.toString()),
             listOf("Subtotal", "$${detalle.subtotal}"),

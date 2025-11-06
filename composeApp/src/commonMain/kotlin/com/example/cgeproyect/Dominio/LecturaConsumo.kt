@@ -1,6 +1,6 @@
 package com.example.cgeproyect.Dominio
 
-// Clase para registrar lecturas mensuales [cite: 146]
+// Representa una lectura de consumo de un medidor
 data class LecturaConsumo(
     val idMedidor: String, // Se vincula por el 'codigo' del medidor
     val anio: Int,

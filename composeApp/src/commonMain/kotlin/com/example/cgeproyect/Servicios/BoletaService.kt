@@ -33,8 +33,6 @@ class BoletaService(
 
         if (lecturaActual == null) throw Exception("No hay lectura para $mes/$anio")
 
-        // El error de 'kwhLeidos' se arregla porque 'lecturaActual'
-        // ahora se reconoce correctamente como de tipo 'LecturaConsumo'
         return lecturaActual.kwhLeidos - (lecturaAnterior?.kwhLeidos ?: 0.0)
     }
 
@@ -49,7 +47,7 @@ class BoletaService(
         val detalleCalculado = tarifaCliente.calcular(kwhConsumidos)
 
         val boleta = Boleta(
-            idCliente = rutCliente,
+            rut = rutCliente,
             anio = anio,
             mes = mes,
             kwhTotal = kwhConsumidos,

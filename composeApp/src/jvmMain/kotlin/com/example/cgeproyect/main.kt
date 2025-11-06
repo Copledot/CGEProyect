@@ -1,9 +1,9 @@
 package com.example.cgeproyect
 
-// Imports para ESCRITORIO
+
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import com.example.cgeproyect.App // Importa tu App compartida
+import com.example.cgeproyect.App
 
 // Punto de entrada para la aplicación de Escritorio
 fun main() = application {

@@ -1,6 +1,6 @@
 package com.example.cgeproyect.Dominio
 
-// Interfaz para objetos que pueden ser exportados [cite: 156]
+// Interfaz para objetos que pueden ser exportados a PDF
 interface ExportablePDF {
-    fun toPdfTable(): PdfTable // [cite: 157]
+    fun toPdfTable(): PdfTable
 }

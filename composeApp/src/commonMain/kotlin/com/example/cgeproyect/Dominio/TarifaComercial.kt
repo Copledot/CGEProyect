@@ -1,6 +1,6 @@
 package com.example.cgeproyect.Dominio
 
-// Implementación de Tarifa [cite: 131]
+// Implementación de la tarifa comercial
 class TarifaComercial : Tarifa {
     private val cargoFijo: Double = 5000.0
     private val precioKwh: Double = 110.0
@@ -8,8 +8,7 @@ class TarifaComercial : Tarifa {
     private val iva: Double = 0.19
 
     override fun nombre(): String = "Tarifa Comercial"
-
-    // Cálculo polimórfico [cite: 37]
+    // Cálculo del detalle de la tarifa comercial
     override fun calcular(kwh: Double): TarifaDetalle {
         val subtotal = kwh * precioKwh
         val recargo = (subtotal + cargoFijo) * recargoComercial

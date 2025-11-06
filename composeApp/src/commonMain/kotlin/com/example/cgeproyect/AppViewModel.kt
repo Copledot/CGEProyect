@@ -4,18 +4,18 @@ import com.example.cgeproyect.Dominio.*
 import com.example.cgeproyect.Persistencia.*
 import com.example.cgeproyect.servicios.BoletaService
 import com.example.cgeproyect.servicios.PdfService
-import com.example.cgeproyect.servicios.TarifaService // <-- IMPORT FALTANTE
+import com.example.cgeproyect.servicios.TarifaService
 
 object AppViewModel {
 
     private val storageDriver = StorageDriver()
 
-    val tarifaService = TarifaService() // <-- Error era aquí
+    val tarifaService = TarifaService()
     val pdfService = PdfService()
 
     val boletaService = BoletaService(
         clienteRepo = storageDriver,
-        medidorRepo = storageDriver, // <-- Error era aquí
+        medidorRepo = storageDriver,
         lecturaRepo = storageDriver,
         boletaRepo = storageDriver,
         tarifaService = tarifaService
@@ -23,9 +23,9 @@ object AppViewModel {
 
     val clienteRepo: ClienteRepositorio = storageDriver
     val lecturaRepo: LecturaRepositorio = storageDriver
-    val medidorRepo: MedidorRepositorio = storageDriver // <-- Error era aquí
+    val medidorRepo: MedidorRepositorio = storageDriver
 
-    // ... (El resto del archivo init{} no cambia) ...
+// Datos de ejemplo
     init {
         val cliente1 = Cliente("11-1", "Juan Perez", "juan@mail.com", "Av. Siempre Viva 123", tipoTarifa = "Residencial")
         val cliente2 = Cliente("22-2", "Ana Lopez", "ana@mail.com", "Oficina Comercial 456", tipoTarifa = "Comercial")

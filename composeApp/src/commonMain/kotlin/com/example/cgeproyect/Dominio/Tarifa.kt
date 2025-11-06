@@ -1,7 +1,7 @@
 package com.example.cgeproyect.Dominio
 
-// Interfaz Tarifa, aplica Polimorfismo [cite: 105, 54]
+// Interfaz para las tarifas de electricidad
 interface Tarifa {
-    fun nombre(): String // [cite: 106]
-    fun calcular(kwh: Double): TarifaDetalle // [cite: 107]
+    fun nombre(): String
+    fun calcular(kwh: Double): TarifaDetalle
 }

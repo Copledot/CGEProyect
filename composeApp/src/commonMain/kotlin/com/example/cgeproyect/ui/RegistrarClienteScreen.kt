@@ -1,5 +1,6 @@
 package com.example.cgeproyect.ui
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
@@ -17,114 +18,160 @@ fun RegistrarClienteScreen(
     clienteRepo: ClienteRepositorio,
     medidorRepo: MedidorRepositorio
 ) {
-    // Variables de estado para el formulario
+    // --- Variables de estado ---
     var rut by remember { mutableStateOf("") }
     var nombre by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var direccion by remember { mutableStateOf("") }
-    var tipoTarifa by remember { mutableStateOf("Residencial") } // Estado para Tarifa
-    var tipoMedidor by remember { mutableStateOf("Monofásico") } // Estado para Medidor
+    var tipoTarifa by remember { mutableStateOf("Residencial") }
+    var tipoMedidor by remember { mutableStateOf("Monofásico") }
     var codigoMedidor by remember { mutableStateOf("") }
-    var mensaje by remember { mutableStateOf("") } // Para el feedback
+    var mensaje by remember { mutableStateOf("") }
 
-    // Usamos LazyColumn para que el formulario sea "scrollable"
-    LazyColumn(
+    // --- 1. LOGICA DE VALIDACION ---
+    val isRutError = rut.isBlank()
+    val isNombreError = nombre.isBlank()
+    val isCodigoError = codigoMedidor.isBlank()
+
+    // El boton solo se activa si los campos principales están llenos
+    val isButtonEnabled = !isRutError && !isNombreError && !isCodigoError
+
+    Box(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentAlignment = Alignment.TopCenter
     ) {
-        item {
-            Text("Registrar Nuevo Cliente", style = MaterialTheme.typography.headlineMedium)
-        }
+        LazyColumn(
+            modifier = Modifier.widthIn(max = 600.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        // --- Campos del Cliente ---
-        item {
-            OutlinedTextField(rut, { rut = it }, label = { Text("RUT (ej: 11-1)") }, modifier = Modifier.fillMaxWidth())
-        }
-        item {
-            OutlinedTextField(nombre, { nombre = it }, label = { Text("Nombre Completo") }, modifier = Modifier.fillMaxWidth())
-        }
-        item {
-            OutlinedTextField(email, { email = it }, label = { Text("Email") }, modifier = Modifier.fillMaxWidth())
-        }
-        item {
-            OutlinedTextField(direccion, { direccion = it }, label = { Text("Dirección de Suministro") }, modifier = Modifier.fillMaxWidth())
-        }
-
-        // --- Selección de Tarifa ---
-        item {
-            Text("Tipo de Tarifa", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 16.dp))
-        }
-        item {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                RadioButton(selected = tipoTarifa == "Residencial", onClick = { tipoTarifa = "Residencial" })
-                Text("Residencial", Modifier.padding(end = 16.dp))
-                RadioButton(selected = tipoTarifa == "Comercial", onClick = { tipoTarifa = "Comercial" })
-                Text("Comercial")
+            item {
+                Text("Registrar Nuevo Cliente", style = MaterialTheme.typography.headlineMedium)
             }
-        }
 
-        // --- Asignación de Medidor ---
-        item {
-            Text("Asignar Medidor", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 16.dp))
-        }
-        item {
-            OutlinedTextField(codigoMedidor, { codigoMedidor = it }, label = { Text("Código de Medidor (ej: MONO-123)") }, modifier = Modifier.fillMaxWidth())
-        }
-        item {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                RadioButton(selected = tipoMedidor == "Monofásico", onClick = { tipoMedidor = "Monofásico" })
-                Text("Monofásico", Modifier.padding(end = 16.dp))
-                RadioButton(selected = tipoMedidor == "Trifásico", onClick = { tipoMedidor = "Trifásico" })
-                Text("Trifásico")
+            // --- 2. CAMPOS CON MARCA DE ERROR ---
+            item {
+                OutlinedTextField(
+                    value = rut,
+                    onValueChange = { rut = it },
+                    label = { Text("RUT (ej: 11-1)") },
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = isRutError // Se marca en rojo si está vacio
+                )
             }
-        }
+            item {
+                OutlinedTextField(
+                    value = nombre,
+                    onValueChange = { nombre = it },
+                    label = { Text("Nombre Completo") },
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = isNombreError // Se marca en rojo si esta vacio
+                )
+            }
+            item {
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Email (Opcional)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            item {
+                OutlinedTextField(
+                    value = direccion,
+                    onValueChange = { direccion = it },
+                    label = { Text("Dirección de Suministro (Opcional)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
 
-        // --- Botón de Guardar y Feedback ---
-        item {
-            Button(
-                onClick = {
-                    try {
-                        // 1. Creamos el Cliente con su tipo de tarifa
-                        val cliente = Cliente(
-                            rut = rut,
-                            nombre = nombre,
-                            email = email,
-                            direccionFacturacion = direccion,
-                            estado = EstadoCliente.ACTIVO,
-                            tipoTarifa = tipoTarifa // <-- Guardamos la tarifa seleccionada
-                        )
 
-                        // 2. Creamos el Medidor
-                        val medidor = if (tipoMedidor == "Monofásico") {
-                            MedidorMonofasico(codigoMedidor, direccion, 15.0) // Potencia default
-                        } else {
-                            MedidorTrifasico(codigoMedidor, direccion, 50.0, 0.95) // Defaults
+            item {
+                Column(Modifier.fillMaxWidth()) {
+                    Text("Tipo de Tarifa", style = MaterialTheme.typography.titleMedium)
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 8.dp)) {
+                        RadioButton(selected = tipoTarifa == "Residencial", onClick = { tipoTarifa = "Residencial" })
+                        Text("Residencial", Modifier.padding(end = 16.dp))
+                        RadioButton(selected = tipoTarifa == "Comercial", onClick = { tipoTarifa = "Comercial" })
+                        Text("Comercial")
+                    }
+                }
+            }
+
+            // --- 3. CAMPO DE MEDIDOR CON MARCA DE ERROR ---
+            item {
+                Column(Modifier.fillMaxWidth()) {
+                    Text("Asignar Medidor", style = MaterialTheme.typography.titleMedium)
+                    OutlinedTextField(
+                        value = codigoMedidor,
+                        onValueChange = { codigoMedidor = it },
+                        label = { Text("Código de Medidor (ej: MONO-123)") },
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                        isError = isCodigoError // Se marca en rojo si esta vacio
+                    )
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 8.dp)) {
+                        RadioButton(selected = tipoMedidor == "Monofásico", onClick = { tipoMedidor = "Monofásico" })
+                        Text("Monofásico", Modifier.padding(end = 16.dp))
+                        RadioButton(selected = tipoMedidor == "Trifásico", onClick = { tipoMedidor = "Trifásico" })
+                        Text("Trifásico")
+                    }
+                }
+            }
+
+            // --- 4. BOTON DESACTIVADO ---
+            item {
+                Button(
+                    onClick = {
+                        // Doble chequeo por si acaso, aunque el boton estaro desactivado
+                        if (!isButtonEnabled) {
+                            mensaje = "Error: RUT, Nombre y Código de Medidor son obligatorios."
+                            return@Button
                         }
 
-                        // 3. Guardamos ambos en los repositorios
-                        clienteRepo.addCliente(cliente)
-                        medidorRepo.addMedidor(medidor, rut)
-
-                        // 4. Damos FEEDBACK de éxito
-                        mensaje = "Cliente '$nombre' y medidor '$codigoMedidor' registrados."
-
-                        // 5. Limpiamos los campos
-                        rut = ""; nombre = ""; email = ""; direccion = ""; codigoMedidor = ""
-
-                    } catch (e: Exception) {
-                        // 4. Damos FEEDBACK de error
-                        mensaje = "Error al registrar: ${e.message}"
-                    }
-                },
-                modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
-            ) {
-                Text("Registrar Cliente y Medidor")
+                        try {
+                            val cliente = Cliente(
+                                rut = rut,
+                                nombre = nombre,
+                                email = email,
+                                direccionFacturacion = direccion,
+                                estado = EstadoCliente.ACTIVO,
+                                tipoTarifa = tipoTarifa
+                            )
+                            val medidor = if (tipoMedidor == "Monofásico") {
+                                MedidorMonofasico(codigoMedidor, direccion, 15.0)
+                            } else {
+                                MedidorTrifasico(codigoMedidor, direccion, 50.0, 0.95)
+                            }
+                            clienteRepo.addCliente(cliente)
+                            medidorRepo.addMedidor(medidor, rut)
+                            mensaje = "Cliente '$nombre' y medidor '$codigoMedidor' registrados."
+                            rut = ""; nombre = ""; email = ""; direccion = ""; codigoMedidor = ""
+                        } catch (e: Exception) {
+                            mensaje = "Error al registrar: ${e.message}"
+                        }
+                    },
+                    enabled = isButtonEnabled, // El botón se activa/desactiva
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
+                ) {
+                    Text("Registrar Cliente y Medidor")
+                }
             }
-        }
 
-        // --- Mensaje de Feedback ---
-        item {
-            Text(mensaje, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleMedium)
+            // Animacion de mensaje
+            item {
+                AnimatedVisibility(
+                    visible = mensaje.isNotEmpty(),
+                    enter = fadeIn() + slideInVertically(),
+                    exit = fadeOut() + slideOutVertically()
+                ) {
+                    Text(
+                        text = mensaje,
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
         }
     }
 }

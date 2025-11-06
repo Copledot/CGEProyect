@@ -2,15 +2,11 @@ package com.example.cgeproyect.servicios
 
 import com.example.cgeproyect.Dominio.Boleta
 import com.example.cgeproyect.Dominio.Cliente
-
-// --- IMPORTACIONES DE PDFBOX (Estas faltaban) ---
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts
-
-// --- IMPORTACIONES DE JAVA (Estas también faltaban) ---
 import java.io.ByteArrayOutputStream
 import java.awt.Color
 import java.text.DecimalFormat
@@ -32,9 +28,9 @@ fun PDPageContentStream.drawLine(x1: Float, y1: Float, x2: Float, y2: Float, wid
     this.lineTo(x2, y2)
     this.stroke()
 }
-// --- FIN FUNCIONES AUXILIARES ---
 
-// Implementación 'actual' para JVM (Escritorio)
+
+// Implementacion 'actual' para JVM (Escritorio)
 actual class PdfService {
 
     actual fun generarBoletaPDF(boleta: Boleta, cliente: Cliente, historial: Map<Int, Double>, medidorCodigo: String): ByteArray {
@@ -63,7 +59,7 @@ actual class PdfService {
             contentStream.drawText("CGE Electricidad S.A.", (pageWidth - font.getStringWidth("CGE Electricidad S.A.") / 1000 * 16f) / 2, yPosition, font, 16f)
             yPosition -= 60
 
-            // --- 2. Información del Cliente ---
+            // --- 2. Informacion del Cliente ---
             val lineHeight = 15f
             contentStream.drawText("Cliente: ${cliente.nombre}", margin, yPosition, font, 12f)
             yPosition -= lineHeight
@@ -72,7 +68,7 @@ actual class PdfService {
             contentStream.drawText("Dirección: ${cliente.direccionFacturacion}", margin, yPosition, font, 12f)
             yPosition -= 40
 
-            // --- SECCIÓN: Mi consumo en el mes actual ---
+            // --- SECCION: Mi consumo en el mes actual ---
             contentStream.drawText("Mi consumo en el mes actual", margin, yPosition, boldFont, 16f)
             yPosition -= 20
             contentStream.drawText("Para determinar cuánta electricidad consumiste en el mes se considera...", margin, yPosition, font, 10f)
@@ -130,7 +126,7 @@ actual class PdfService {
 
             yPosition -= 50
 
-            // --- SECCIÓN: Detalles de la Boleta ---
+            // --- SECCION: Detalles de la Boleta ---
             contentStream.drawText("Detalles de tu boleta", margin, yPosition, boldFont, 16f)
             yPosition -= 20
 
@@ -186,7 +182,7 @@ actual class PdfService {
 
             yPosition -= 50
 
-            // --- SECCIÓN: Historial de consumo ---
+            // --- SECCION: Historial de consumo ---
             contentStream.drawText("Consumo en los últimos 12 meses (kWh)", margin, yPosition, boldFont, 16f)
             yPosition -= 30
 
@@ -216,7 +212,7 @@ actual class PdfService {
             yPosition -= maxBarHeight + 30
 
 
-            // --- PIE DE PÁGINA ---
+
             yPosition = margin
             contentStream.drawText("Gracias por su preferencia.", (pageWidth - font.getStringWidth("Gracias por su preferencia.") / 1000 * 10f) / 2, yPosition, font, 10f)
 

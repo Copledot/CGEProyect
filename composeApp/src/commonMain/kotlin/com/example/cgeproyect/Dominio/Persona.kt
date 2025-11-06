@@ -1,6 +1,6 @@
 package com.example.cgeproyect.Dominio
 
-// Hereda de la EntidadBase (ahora corregida)
+// Clase abstracta que representa una persona
 abstract class Persona : EntidadBase() {
     abstract val rut: String
     abstract val nombre: String
