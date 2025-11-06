@@ -1,4 +1,0 @@
-package Servicios
-
-interface PdfService {
-}
