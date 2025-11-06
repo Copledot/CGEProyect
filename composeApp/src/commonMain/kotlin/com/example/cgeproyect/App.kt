@@ -1,47 +1,84 @@
 package com.example.cgeproyect
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.cgeproyect.theme.AppTheme
+import com.example.cgeproyect.ui.BoletaScreen
+import com.example.cgeproyect.ui.ClienteScreen
+import com.example.cgeproyect.ui.LecturaScreen
+import com.example.cgeproyect.ui.RegistrarClienteScreen // <-- Importa la nueva pantalla
 
-import cgeproyect.composeapp.generated.resources.Res
-import cgeproyect.composeapp.generated.resources.compose_multiplatform
+// Enum de navegación actualizado
+enum class Pantalla {
+    REGISTRAR,
+    LISTA_CLIENTES, // Renombrada de "CLIENTES"
+    LECTURAS,
+    BOLETAS
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
 fun App() {
-    MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .safeContentPadding()
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
+    AppTheme {
+        var pantallaActual by remember { mutableStateOf(Pantalla.REGISTRAR) } // Inicia en Registrar
+
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("CGE Electricidad - Gestión") },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                )
+            },
+            bottomBar = {
+                NavigationBar {
+                    // Pestaña 1: Registrar
+                    NavigationBarItem(
+                        icon = { Spacer(Modifier.size(24.dp)) }, // Usamos Spacer
+                        label = { Text("Registrar") },
+                        selected = pantallaActual == Pantalla.REGISTRAR,
+                        onClick = { pantallaActual = Pantalla.REGISTRAR }
+                    )
+                    // Pestaña 2: Lista de Clientes
+                    NavigationBarItem(
+                        icon = { Spacer(Modifier.size(24.dp)) },
+                        label = { Text("Clientes") },
+                        selected = pantallaActual == Pantalla.LISTA_CLIENTES,
+                        onClick = { pantallaActual = Pantalla.LISTA_CLIENTES }
+                    )
+                    // Pestaña 3: Lecturas
+                    NavigationBarItem(
+                        icon = { Spacer(Modifier.size(24.dp)) },
+                        label = { Text("Lecturas") },
+                        selected = pantallaActual == Pantalla.LECTURAS,
+                        onClick = { pantallaActual = Pantalla.LECTURAS }
+                    )
+                    // Pestaña 4: Boletas
+                    NavigationBarItem(
+                        icon = { Spacer(Modifier.size(24.dp)) },
+                        label = { Text("Boletas") },
+                        selected = pantallaActual == Pantalla.BOLETAS,
+                        onClick = { pantallaActual = Pantalla.BOLETAS }
+                    )
+                }
             }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
+        ) { innerPadding ->
+            Box(Modifier.padding(innerPadding).fillMaxSize().padding(16.dp)) {
+                // Contenido de la pantalla actual
+                when (pantallaActual) {
+                    Pantalla.REGISTRAR -> RegistrarClienteScreen(AppViewModel.clienteRepo, AppViewModel.medidorRepo)
+                    Pantalla.LISTA_CLIENTES -> ClienteScreen(AppViewModel.clienteRepo, AppViewModel.medidorRepo)
+                    Pantalla.LECTURAS -> LecturaScreen(AppViewModel.lecturaRepo, AppViewModel.medidorRepo)
+                    Pantalla.BOLETAS -> BoletaScreen(AppViewModel.boletaService)
                 }
             }
         }

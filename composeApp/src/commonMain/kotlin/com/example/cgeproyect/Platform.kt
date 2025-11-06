@@ -1,7 +1,7 @@
 package com.example.cgeproyect
 
-interface Platform {
-    val name: String
-}
+expect fun getPlatformName(): String
 
-expect fun getPlatform(): Platform
+// --- AÑADE ESTA FUNCIÓN ---
+// Pide a la plataforma que guarde un archivo
+expect fun savePdf(bytes: ByteArray, fileName: String): String

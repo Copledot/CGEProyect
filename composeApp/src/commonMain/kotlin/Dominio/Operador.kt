@@ -1,4 +1,0 @@
-package Dominio
-
-class Operador {
-}

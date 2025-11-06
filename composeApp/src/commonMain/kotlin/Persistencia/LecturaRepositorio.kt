@@ -1,4 +1,0 @@
-package Persistencia
-
-interface LecturaRepositorio {
-}
