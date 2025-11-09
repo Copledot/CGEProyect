@@ -1,18 +1,12 @@
 package com.example.cgeproyect.servicios
 
-// --- IMPORTACIONES DEL DOMINIO ---
+
 import com.example.cgeproyect.Dominio.Boleta
 import com.example.cgeproyect.Dominio.*
-
-// --- IMPORTACIONES DE PERSISTENCIA (Estas faltaban) ---
-
 import com.example.cgeproyect.Persistencia.BoletaRepositorio
 import com.example.cgeproyect.Persistencia.ClienteRepositorio
 import com.example.cgeproyect.Persistencia.LecturaRepositorio
 import com.example.cgeproyect.Persistencia.MedidorRepositorio
-
-// --- IMPORTACIONES DE SERVICIOS (Estas faltaban) ---
-
 import com.example.cgeproyect.servicios.PdfService
 import com.example.cgeproyect.servicios.TarifaService
 
