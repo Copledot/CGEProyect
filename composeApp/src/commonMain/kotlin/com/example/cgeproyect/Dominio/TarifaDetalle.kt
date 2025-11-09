@@ -6,5 +6,5 @@ data class TarifaDetalle(
     val subtotal: Double,
     val cargos: Double,
     val iva: Double,
-    val total: Double // [cite: 155]
+    val total: Double 
 )
