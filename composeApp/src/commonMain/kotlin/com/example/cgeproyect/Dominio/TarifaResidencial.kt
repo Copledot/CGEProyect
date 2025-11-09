@@ -1,6 +1,6 @@
 package com.example.cgeproyect.Dominio
 
-// Implementación de la tarifa residencial
+// Implementacion de la tarifa residencial
 class TarifaResidencial : Tarifa {
     private val cargoFijo: Double = 1500.0
     private val precioKwh: Double = 120.0
